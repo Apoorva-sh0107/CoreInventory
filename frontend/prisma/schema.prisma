@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  loginId      String   @unique
+  email        String   @unique
+  passwordHash String
+  role         String   @default("User")
+  otpCode      String?  
+  otpExpiry    DateTime? 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ReceiptDocument ReceiptDocument[]
+  DeliveryDocument DeliveryDocument[]
+}
+
+model Warehouse {
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String   @unique
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Location          Location[]
+  ReceiptDocument   ReceiptDocument[]
+  DeliveryDocument  DeliveryDocument[]
+}
+
+model Location {
+  id            Int      @id @default(autoincrement())
+  name          String
+  code          String   @unique
+  warehouseCode String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  warehouse Warehouse @relation(fields: [warehouseCode], references: [code])
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  name         String
+  category     String?
+  unitCost     Float    @default(0.0)
+  onHand       Int      @default(0)
+  freeToUse    Int      @default(0)
+  imageUrl     String?
+  locationCode String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ReceiptItem  ReceiptItem[]
+  DeliveryItem DeliveryItem[]
+}
+
+model ReceiptDocument {
+  id            String   @id // e.g., WH/IN/0001
+  status        String   @default("Draft") // Draft, Ready, Done
+  vendor        String
+  date          String   // Scheduled Date
+  responsibleId Int
+  warehouseCode String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  responsible User      @relation(fields: [responsibleId], references: [id])
+  warehouse   Warehouse @relation(fields: [warehouseCode], references: [code])
+  items       ReceiptItem[]
+}
+
+model ReceiptItem {
+  id         Int    @id @default(autoincrement())
+  documentId String
+  productId  Int
+  quantity   Int
+
+  document ReceiptDocument @relation(fields: [documentId], references: [id])
+  product  Product         @relation(fields: [productId], references: [id])
+}
+
+model DeliveryDocument {
+  id            String   @id // e.g., WH/OUT/0001
+  status        String   @default("Draft") // Draft, Waiting, Ready, Done
+  customer      String
+  date          String   // Scheduled Date
+  responsibleId Int
+  warehouseCode String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  responsible User      @relation(fields: [responsibleId], references: [id])
+  warehouse   Warehouse @relation(fields: [warehouseCode], references: [code])
+  items       DeliveryItem[]
+}
+
+model DeliveryItem {
+  id         Int    @id @default(autoincrement())
+  documentId String
+  productId  Int
+  quantity   Int
+
+  document DeliveryDocument @relation(fields: [documentId], references: [id])
+  product  Product          @relation(fields: [productId], references: [id])
+}
+
+model OperationMove {
+  id           Int      @id @default(autoincrement())
+  reference    String   // Document ID
+  type         String   // Receipt, Delivery, Adjustment
+  status       String   @default("Done")
+  date         String
+  contact      String?
+  productName  String
+  quantity     Int
+  fromLocation String?
+  toLocation   String?
+  createdAt    DateTime @default(now())
+}

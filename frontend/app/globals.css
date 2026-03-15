@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary: #714B67;
+  --primary-light: #8F6B82;
+  --primary-dark: #4A2545;
+  --primary-darker: #2D1B30;
+  --accent: #D4A0C0;
+  --bg: #F5F3F7;
+  --card-bg: #ffffff;
+  --text: #1A1A2E;
+  --text-secondary: #555566;
+  --text-muted: #8E8E9A;
+  --border: #E0DDE3;
+  --input-border: #CBC7D0;
+  --input-focus: #714B67;
+  --error: #D93025;
+  --success: #0D9668;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Form row: label left, input right ---- */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.form-row label {
+  flex: 0 0 140px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.form-row input {
+  flex: 1;
+  background: #F8F7FA;
+  border: 2px solid #D0CCD4;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  transition: all 0.25s ease;
+  outline: none;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.form-row input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.03), 0 0 0 4px rgba(113,75,103,0.15);
+}
+
+.form-row input::placeholder {
+  color: #B0ADB5;
+  font-weight: 400;
+}
+
+.form-row input.input-error {
+  border-color: var(--error);
+  background: #FFF5F5;
+}
+
+/* ---- Button ---- */
+.btn-primary {
+  background: linear-gradient(135deg, #714B67 0%, #4A2545 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 56px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.08em;
+  box-shadow: 0 6px 20px rgba(113,75,103,0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #8F6B82 0%, #5A3A52 100%);
+  box-shadow: 0 10px 32px rgba(113,75,103,0.45);
+  transform: translateY(-3px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---- Auth links ---- */
+.auth-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.auth-link:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+/* ---- Soft background orbs for dashboard ---- */
+@keyframes floatSoft {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(20px, -12px, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(-14px, 10px, 0) scale(1);
+  }
+}
+
+.soft-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(68px);
+  opacity: 0.55;
+  animation: floatSoft 34s ease-in-out infinite alternate;
+}
+
+.soft-orb--purple {
+  background: radial-gradient(circle at 30% 0%, #f3e5ff, transparent 65%);
+}
+
+.soft-orb--pink {
+  background: radial-gradient(circle at 50% 0%, #ffd6e8, transparent 65%);
+}
+
+.soft-orb--indigo {
+  background: radial-gradient(circle at 30% 100%, #dde4ff, transparent 65%);
+}
